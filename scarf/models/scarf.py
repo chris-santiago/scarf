@@ -3,6 +3,7 @@ from typing import Optional
 import pytorch_metric_learning.losses as losses
 import torch
 import torch.nn as nn
+import torchmetrics
 
 from scarf.models.base import BaseModule
 
@@ -107,8 +108,6 @@ class SCARFEncoder(BaseModule):
     ):
         super().__init__(loss_func=loss_func, optim=optim, scheduler=scheduler)
 
-        self.save_hyperparameters()
-
         self.get_mask = MaskGenerator(p=p_mask)
         self.corrupt = PretextGenerator()
 
@@ -154,6 +153,72 @@ class SCARFEncoder(BaseModule):
             "loss", loss, on_step=True, on_epoch=True, prog_bar=True, logger=False
         )
         metrics = {"valid-loss": loss}
+        self.log_dict(
+            metrics,
+            on_step=False,
+            on_epoch=True,
+            prog_bar=False,
+            logger=True,
+        )
+        return loss
+
+
+class SCARFLearner(BaseModule):
+    def __init__(
+            self,
+            encoder_ckpt: str,
+            dim_hidden: int = 256,
+            n_layers: int = 2,
+            num_classes: int = 7,
+            loss_func: nn.Module = nn.CrossEntropyLoss(),
+            score_func: torchmetrics.Metric = torchmetrics.Accuracy(task="multiclass", num_classes=7),
+            optim: Optional[torch.optim.Optimizer] = None,
+            scheduler: Optional[torch.optim.lr_scheduler.LRScheduler] = None,
+
+    ):
+        super().__init__(loss_func=loss_func, optim=optim, scheduler=scheduler)
+
+        self.encoder = SCARFEncoder.load_from_checkpoint(encoder_ckpt)
+        self.score_func = score_func
+
+        self.classifier = nn.Sequential(
+            LazyMLP(n_layers=n_layers, dim_hidden=dim_hidden),
+            nn.Linear(dim_hidden, num_classes)
+        )
+
+    def forward(self, x) -> torch.Tensor:
+        embd = self.encoder(x)
+        return self.classifier(embd)
+
+    def training_step(self, batch, idx):
+        x, y = batch
+        preds = self(x)
+        loss = self.loss_func(preds, y)
+        score = self.score_func(preds, y)
+
+        self.log(
+            "loss", loss, on_step=True, on_epoch=True, prog_bar=True, logger=False
+        )
+        metrics = {"train-loss": loss, "train-acc": score}
+        self.log_dict(
+            metrics,
+            on_step=False,
+            on_epoch=True,
+            prog_bar=False,
+            logger=True,
+        )
+        return loss
+
+    def validation_step(self, batch, idx):
+        x, y = batch
+        preds = self(x)
+        loss = self.loss_func(preds, y)
+        score = self.score_func(preds, y)
+
+        self.log(
+            "loss", loss, on_step=True, on_epoch=True, prog_bar=True, logger=False
+        )
+        metrics = {"valid-loss": loss, "valid-acc": score}
         self.log_dict(
             metrics,
             on_step=False,

@@ -1,3 +1,8 @@
+defaults:
+  - hydra: default
+  # Overrides must be last
+  - override hydra/launcher: joblib
+
 data:
   raw: ObesityDataSet.csv
 
