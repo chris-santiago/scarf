@@ -1,0 +1,12 @@
+batch_size: 128
+n_workers: 10  # Multirun launcher requires n_workers=0 otherwise it fails
+name: obesity
+
+train:
+  _target_: torch.utils.data.DataLoader
+  dataset:
+    _target_: scarf.data.CSVDataset
+    file_path: data/train.csv
+  batch_size: ${data.batch_size}
+  shuffle: True
+  num_workers: ${data.n_workers}

@@ -1,0 +1,4 @@
+defaults:
+  - default
+
+check_val_every_n_epoch: 10

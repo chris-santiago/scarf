@@ -1,0 +1,24 @@
+data:
+  raw: ObesityDataSet.csv
+
+features:
+  numeric:
+    - Age
+    - Height
+    - Weight
+    - FCVC
+    - NCP
+    - CH2O
+    - FAF
+    - TUE
+  categoric:
+    - Gender
+    - family_history_with_overweight
+    - FAVC
+    - CAEC
+    - SMOKE
+    - SCC
+    - CALC
+    - MTRANS
+
+target: NObeyesdad

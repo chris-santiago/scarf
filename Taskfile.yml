@@ -18,6 +18,21 @@ tasks:
     cmds:
       - wandb login $WANDB_KEY
 
+  preprocess:
+    desc: Preprocess raw data
+    cmds:
+      - python scarf/preprocess.py {{.CLI_ARGS}}
+
+  make-valid:
+    desc: Generate static validation data for pre-training
+    cmds:
+      - python -c "from scarf.data import make_static_validation_data; make_static_validation_data()"
+
+  train-self:
+    desc: Train the encoder module
+    cmds:
+      - python scarf/train_self.py {{.CLI_ARGS}}
+
   train:
     desc: Train a model
     cmds:

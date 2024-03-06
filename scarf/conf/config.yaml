@@ -13,10 +13,10 @@ hydra:
     subdir: ${hydra.job.override_dirname}/${now:%Y-%m-%d}/${now:%H-%M-%S}
 
 defaults:
-  - data: mnist
-  - model: base
-  - trainer: default
-  - callbacks: default
+  - data: encoder
+  - model: encoder
+  - trainer: encoder
+  - callbacks: encoder
   # Use experiment configs to add some overrides
   - experiment: null
   # Overrides must be last

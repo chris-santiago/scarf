@@ -1,0 +1,10 @@
+defaults:
+  - default
+
+valid:
+  _target_: torch.utils.data.DataLoader
+  dataset:
+    _target_: scarf.data.StaticDataset
+  batch_size: ${data.batch_size}
+  shuffle: False
+  num_workers: ${data.n_workers}

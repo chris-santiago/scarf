@@ -1,7 +1,7 @@
 exclude: (^notebooks/)
 repos:
   - repo: https://github.com/pdm-project/pdm
-    rev: 2.10.4 # a PDM release exposing the hook
+    rev: 2.12.4 # a PDM release exposing the hook
     hooks:
       - id: pdm-lock-check
       - id: pdm-export
@@ -12,15 +12,20 @@ repos:
     hooks:
       - id: ruff
         name: ruff
-        entry: ruff
+        entry: ruff check
         language: system
         args: [--fix, --exit-non-zero-on-fix]
         types: [ python ]
-      - id: black
-        name: black
-        entry: black
+      - id: ruff-format
+        name: ruff-format
+        entry: ruff format
         language: system
         types: [ python ]
+#      - id: black
+#        name: black
+#        entry: black
+#        language: system
+#        types: [ python ]
       - id: isort
         name: isort
         entry: isort

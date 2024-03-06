@@ -4,11 +4,18 @@
 # See https://stackoverflow.com/questions/71438040/overwriting-hydra-configuration-groups-from-cli/71439510#71439510
 defaults:
   - /optimizer@optimizer: adam
-  - /scheduler@scheduler: cyclic
+  - /scheduler@scheduler: plateau
 
-name:
+name: scarf-encoder
 
 nn:
-  _target_:
+  _target_: scarf.models.scarf.SCARFEncoder
+  dim_hidden: 256
+  n_encoder_layers: 4
+  n_projection_layers: 2
+  p_mask: 0.6
   loss_func:
-    _target_: torch.nn.MSELoss
+    _target_: pytorch_metric_learning.losses.SelfSupervisedLoss
+    loss:
+      _target_: pytorch_metric_learning.losses.NTXentLoss
+      temperature: 1.0

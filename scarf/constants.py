@@ -10,3 +10,8 @@ class Constants:
     DATA = REPO.joinpath("data")
     OUTPUTS = REPO.joinpath("outputs")
     SEED = 43
+
+
+constants = Constants()
+constants.DATA.mkdir(exist_ok=True)
+constants.OUTPUTS.mkdir(exist_ok=True)
