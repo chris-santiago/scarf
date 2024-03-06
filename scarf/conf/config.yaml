@@ -9,6 +9,8 @@ defaults:
   # Overrides must be last
   - override hydra/launcher: joblib
 
+seed: 43
+
 tags: ["${data.name}", "${model.name}"]
 
 trainer:

@@ -1,0 +1,61 @@
+defaults:
+  - hydra: eval
+  - data: learner
+  # Overrides must be last
+  - override hydra/launcher: joblib
+
+seed: 43
+
+models:
+  scarf:
+    name: SCARF
+    estimator:
+      _target_: scarf.models.scarf.SCARFLearner.load_from_checkpoint
+      checkpoint_path: outputs/scarf-learner/train/2024-03-05/23-07-46/checkpoints/epoch=14-step=210.ckpt
+      map_location:
+        _target_: torch.device
+        _args_:
+          -  cpu
+
+  gbm:
+    name: GBM
+    estimator:
+      _target_: joblib.load
+      filename: outputs/gradient-booster/train_baseline/2024-03-06/15-28-28/gradient-booster-estimator.joblib
+
+  linear:
+    name: Linear
+    estimator:
+      _target_: joblib.load
+      filename: outputs/linear/train_baseline/2024-03-06/15-29-56/linear-estimator.joblib
+
+task: multiclass
+num_classes: 7
+
+metrics:
+  Accuracy:
+    _target_: torchmetrics.Accuracy
+    task: ${task}
+    num_classes: ${num_classes}
+  AUROC:
+    _target_: torchmetrics.AUROC
+    task: ${task}
+    num_classes: ${num_classes}
+  AUPRC:
+    _target_: torchmetrics.AveragePrecision
+    task: ${task}
+    num_classes: ${num_classes}
+  F1-Score:
+    _target_: torchmetrics.F1Score
+    task: ${task}
+    num_classes: ${num_classes}
+
+plots:
+  Confusion Matrix:
+    _target_: torchmetrics.ConfusionMatrix
+    task: ${task}
+    num_classes: ${num_classes}
+  Receiver Operator Curve:
+    _target_: torchmetrics.ROC
+    task: ${task}
+    num_classes: ${num_classes}

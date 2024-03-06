@@ -28,12 +28,17 @@ tasks:
     cmds:
       - python -c "from scarf.data import make_static_validation_data; make_static_validation_data()"
 
-  train-self:
-    desc: Train the encoder module
-    cmds:
-      - python scarf/train.py {{.CLI_ARGS}}
-
   train:
     desc: Train a model
     cmds:
       - python scarf/train.py {{.CLI_ARGS}}
+
+  train-baseline:
+    desc: Train a baseline Scikit-Learn estimator
+    cmds:
+      - python scarf/train_baseline.py {{.CLI_ARGS}}
+
+  eval:
+    desc: Evaluate a model or models
+    cmds:
+      - python scarf/eval.py {{.CLI_ARGS}}

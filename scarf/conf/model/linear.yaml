@@ -1,0 +1,7 @@
+name: linear
+
+estimator:
+  _target_: sklearn.linear_model.LogisticRegressionCV
+  Cs: 10
+  cv: 3
+  max_iter: 500
