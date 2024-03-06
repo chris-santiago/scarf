@@ -28,6 +28,7 @@ dependencies = [
     "rich>=13.7.1",
     "hydra-joblib-launcher>=1.2.0",
     "pytorch-metric-learning>=2.4.1",
+    "matplotlib>=3.8.3",
 ]
 
 [project.urls]
