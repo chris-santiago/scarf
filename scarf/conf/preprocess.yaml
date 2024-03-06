@@ -1,5 +1,5 @@
 defaults:
-  - hydra: default
+  - hydra: eval  # doesn't use model.name
   # Overrides must be last
   - override hydra/launcher: joblib
 
