@@ -87,7 +87,7 @@ class LazyMLP(nn.Module):
 
         self.model = nn.Sequential(
             lazy_block,
-            *[LinearLayer(dim_hidden, dim_hidden, batch_norm) for _ in range(n_layers - 1)]
+            *[LinearLayer(dim_hidden, dim_hidden, batch_norm) for _ in range(n_layers - 1)],
         )
 
     def forward(self, x: torch.tensor):
@@ -130,9 +130,7 @@ class SCARFEncoder(BaseModule):
         proj_x, proj_corrupt = self.projection(enc_x), self.projection(enc_corrupt)
         loss = self.loss_func(proj_corrupt, proj_x)
 
-        self.log(
-            "loss", loss, on_step=True, on_epoch=True, prog_bar=True, logger=False
-        )
+        self.log("loss", loss, on_step=True, on_epoch=True, prog_bar=True, logger=False)
         metrics = {"train-loss": loss}
         self.log_dict(
             metrics,
@@ -149,9 +147,7 @@ class SCARFEncoder(BaseModule):
         proj_x, proj_corrupt = self.projection(enc_x), self.projection(enc_corrupt)
         loss = self.loss_func(proj_corrupt, proj_x)
 
-        self.log(
-            "loss", loss, on_step=True, on_epoch=True, prog_bar=True, logger=False
-        )
+        self.log("loss", loss, on_step=True, on_epoch=True, prog_bar=True, logger=False)
         metrics = {"valid-loss": loss}
         self.log_dict(
             metrics,
@@ -165,16 +161,15 @@ class SCARFEncoder(BaseModule):
 
 class SCARFLearner(BaseModule):
     def __init__(
-            self,
-            encoder_ckpt: str,
-            dim_hidden: int = 256,
-            n_layers: int = 2,
-            num_classes: int = 7,
-            loss_func: nn.Module = nn.CrossEntropyLoss(),
-            score_func: torchmetrics.Metric = torchmetrics.Accuracy(task="multiclass", num_classes=7),
-            optim: Optional[torch.optim.Optimizer] = None,
-            scheduler: Optional[torch.optim.lr_scheduler.LRScheduler] = None,
-
+        self,
+        encoder_ckpt: str,
+        dim_hidden: int = 256,
+        n_layers: int = 2,
+        num_classes: int = 7,
+        loss_func: nn.Module = nn.CrossEntropyLoss(),
+        score_func: torchmetrics.Metric = torchmetrics.Accuracy(task="multiclass", num_classes=7),
+        optim: Optional[torch.optim.Optimizer] = None,
+        scheduler: Optional[torch.optim.lr_scheduler.LRScheduler] = None,
     ):
         super().__init__(loss_func=loss_func, optim=optim, scheduler=scheduler)
 
@@ -182,8 +177,7 @@ class SCARFLearner(BaseModule):
         self.score_func = score_func
 
         self.classifier = nn.Sequential(
-            LazyMLP(n_layers=n_layers, dim_hidden=dim_hidden),
-            nn.Linear(dim_hidden, num_classes)
+            LazyMLP(n_layers=n_layers, dim_hidden=dim_hidden), nn.Linear(dim_hidden, num_classes)
         )
 
     def forward(self, x) -> torch.Tensor:
@@ -196,9 +190,7 @@ class SCARFLearner(BaseModule):
         loss = self.loss_func(preds, y)
         score = self.score_func(preds, y)
 
-        self.log(
-            "loss", loss, on_step=True, on_epoch=True, prog_bar=True, logger=False
-        )
+        self.log("loss", loss, on_step=True, on_epoch=True, prog_bar=True, logger=False)
         metrics = {"train-loss": loss, "train-acc": score}
         self.log_dict(
             metrics,
@@ -215,9 +207,7 @@ class SCARFLearner(BaseModule):
         loss = self.loss_func(preds, y)
         score = self.score_func(preds, y)
 
-        self.log(
-            "loss", loss, on_step=True, on_epoch=True, prog_bar=True, logger=False
-        )
+        self.log("loss", loss, on_step=True, on_epoch=True, prog_bar=True, logger=False)
         metrics = {"valid-loss": loss, "valid-acc": score}
         self.log_dict(
             metrics,
