@@ -1,0 +1,24 @@
+data:
+  raw: s4e2-train.csv
+incl_test: false
+file_suffix: s4e2-ps
+features:
+  numeric:
+  - Age
+  - Height
+  - Weight
+  - FCVC
+  - NCP
+  - CH2O
+  - FAF
+  - TUE
+  categoric:
+  - Gender
+  - family_history_with_overweight
+  - FAVC
+  - CAEC
+  - SMOKE
+  - SCC
+  - CALC
+  - MTRANS
+target: NObeyesdad
