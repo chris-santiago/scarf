@@ -1,0 +1,12 @@
+defaults:
+  - kaggle
+
+
+valid:
+  _target_: torch.utils.data.DataLoader
+  dataset:
+    _target_: scarf.data.CSVDataset
+    file_path: data/valid-s4e2-ps.csv
+  batch_size: ${data.batch_size}
+  shuffle: False
+  num_workers: ${data.n_workers}

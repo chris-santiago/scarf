@@ -1,0 +1,6 @@
+defaults:
+  - learner
+
+nn:
+  encoder_ckpt: outputs/scarf-encoder/train/2024-03-07/08-32-30/checkpoints/epoch=56-step=8322.ckpt
+  dim_hidden: 64
