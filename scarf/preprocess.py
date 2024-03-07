@@ -38,9 +38,17 @@ def make_processor(
 ) -> sklearn.compose.ColumnTransformer:
     return ColumnTransformer(
         [
-            ("ohe", OneHotEncoder(), cat_features),
+            ("ohe", OneHotEncoder(handle_unknown="infrequent_if_exist"), cat_features),
             ("scale", StandardScaler(), num_features),
-            ("target", OrdinalEncoder(), [target]),
+            (
+                "target",
+                OrdinalEncoder(
+                    handle_unknown="use_encoded_value",
+                    unknown_value=999,
+                    encoded_missing_value=-999,
+                ),
+                [target],
+            ),
         ]
     )
 
