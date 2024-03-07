@@ -7,7 +7,6 @@ import hydra
 import pandas as pd
 import torch
 
-import scarf.callbacks
 import scarf.constants
 
 constants = scarf.constants.Constants()
