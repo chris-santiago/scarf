@@ -6,6 +6,9 @@ defaults:
 data:
   raw: ObesityDataSet.csv
 
+incl_test: False
+file_suffix: s4e2-ps
+
 features:
   numeric:
     - Age
