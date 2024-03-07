@@ -38,21 +38,25 @@ def generate_corrupted_pairs(ds: CSVDataset, n_iter: int = 10, p_mask: float = 0
     return torch.concat([x[0] for x in pairs]), torch.concat([x[1] for x in pairs])
 
 
-def make_static_validation_data():
-    ds = CSVDataset(constants.DATA.joinpath("valid.csv"))
+def make_static_validation_data(file_name: str = "valid.csv"):
+    ds = CSVDataset(constants.DATA.joinpath(file_name))
     x_corrupt, x = generate_corrupted_pairs(ds)
 
-    fp = constants.DATA.joinpath("valid-corrupt.pt")
+    prefix = file_name.split(".")[0]
+    fp = constants.DATA.joinpath(f"{prefix}-corrupt.pt")
     torch.save(x_corrupt, fp)
 
-    fp = constants.DATA.joinpath("valid-x.pt")
+    fp = constants.DATA.joinpath(f"{prefix}-x.pt")
     torch.save(x, fp)
 
 
+# Strange hydra behavior when parameterizing these filepaths.
+# Hydra didn't recognize _target_ call when followed with filepaths.
+# Install is editable, so not sure what was going on...maybe some sort of cache?
 class StaticDataset(torch.utils.data.Dataset):
-    def __init__(self):
-        self.x_corrupt = torch.load(constants.DATA.joinpath("valid-corrupt.pt"))
-        self.x = torch.load(constants.DATA.joinpath("valid-x.pt"))
+    def __init__(self, corrupt_fp, valid_fp):
+        self.x_corrupt = torch.load(constants.DATA.joinpath(corrupt_fp))
+        self.x = torch.load(constants.DATA.joinpath(valid_fp))
 
     def __len__(self):
         return len(self.x)

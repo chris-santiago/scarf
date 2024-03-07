@@ -1,0 +1,21 @@
+defaults:
+  - hydra: default  # doesn't use model.name
+  # Overrides must be last
+  - override hydra/launcher: joblib
+
+model:
+  name: scarf-learner
+  estimator:
+    _target_: scarf.models.scarf.SCARFLearner.load_from_checkpoint
+    checkpoint_path: outputs/scarf-learner/train/2024-03-06/22-15-11/checkpoints/epoch=5-step=876.ckpt
+    map_location:
+      _target_: torch.device
+      _args_:
+        - cpu
+
+data:
+  test: data/s4e2-test.csv
+
+preprocessor:
+  _target_: joblib.load
+  filename: outputs/preprocess/2024-03-06/17-32-21/preprocessor.joblib
