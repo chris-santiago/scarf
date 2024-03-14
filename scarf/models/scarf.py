@@ -105,14 +105,19 @@ class SCARFEncoder(BaseModule):
         loss_func: nn.Module = losses.SelfSupervisedLoss(losses.NTXentLoss(temperature=1.0)),
         optim: Optional[torch.optim.Optimizer] = None,
         scheduler: Optional[torch.optim.lr_scheduler.LRScheduler] = None,
+        batch_norm: bool = False,
     ):
         super().__init__(loss_func=loss_func, optim=optim, scheduler=scheduler)
 
         self.get_mask = MaskGenerator(p=p_mask)
         self.corrupt = PretextGenerator()
 
-        self.encoder = LazyMLP(n_layers=n_encoder_layers, dim_hidden=dim_hidden)
-        self.projection = LazyMLP(n_layers=n_projection_layers, dim_hidden=dim_hidden)
+        self.encoder = LazyMLP(
+            n_layers=n_encoder_layers, dim_hidden=dim_hidden, batch_norm=batch_norm
+        )
+        self.projection = LazyMLP(
+            n_layers=n_projection_layers, dim_hidden=dim_hidden, batch_norm=batch_norm
+        )
 
     def forward(self, x) -> torch.Tensor:
         return self.encoder(x)

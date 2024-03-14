@@ -6,8 +6,8 @@ defaults:
 data:
   raw: ObesityDataSet.csv
 
-incl_test: False
-file_suffix: s4e2-ps
+incl_test: True
+file_suffix: null
 
 features:
   numeric:

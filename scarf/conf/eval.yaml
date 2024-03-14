@@ -11,7 +11,7 @@ models:
     name: SCARF
     estimator:
       _target_: scarf.models.scarf.SCARFLearner.load_from_checkpoint
-      checkpoint_path: outputs/scarf-learner/train/2024-03-05/23-07-46/checkpoints/epoch=14-step=210.ckpt
+      checkpoint_path: outputs/scarf-learner/train/2024-03-13/09-41-32/checkpoints/epoch=3-step=56.ckpt
       map_location:
         _target_: torch.device
         _args_:

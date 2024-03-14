@@ -13,9 +13,10 @@ nn:
   dim_hidden: 256
   n_encoder_layers: 4
   n_projection_layers: 2
-  p_mask: 0.6
+  p_mask: 0.7
   loss_func:
     _target_: pytorch_metric_learning.losses.SelfSupervisedLoss
     loss:
       _target_: pytorch_metric_learning.losses.NTXentLoss
       temperature: 1.0
+  batch_norm: True

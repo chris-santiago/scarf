@@ -1,0 +1,20 @@
+{
+    "scarf": {
+        "Accuracy": 0.9292,
+        "AUROC": 0.9941,
+        "AUPRC": 0.9681,
+        "F1-Score": 0.9292
+    },
+    "gbm": {
+        "Accuracy": 0.9575,
+        "AUROC": 0.9964,
+        "AUPRC": 0.9753,
+        "F1-Score": 0.9575
+    },
+    "linear": {
+        "Accuracy": 0.9764,
+        "AUROC": 0.9983,
+        "AUPRC": 0.9904,
+        "F1-Score": 0.9764
+    }
+}

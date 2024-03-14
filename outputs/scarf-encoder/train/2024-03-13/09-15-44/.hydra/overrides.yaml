@@ -1,0 +1,2 @@
+- experiment=encoder
+- model.nn.dim_hidden=64

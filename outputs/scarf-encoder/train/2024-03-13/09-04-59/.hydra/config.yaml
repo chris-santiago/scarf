@@ -1,0 +1,86 @@
+data:
+  batch_size: 128
+  n_workers: 10
+  name: obesity
+  train:
+    _target_: torch.utils.data.DataLoader
+    dataset:
+      _target_: scarf.data.CSVDataset
+      file_path: data/train.csv
+    batch_size: ${data.batch_size}
+    shuffle: true
+    num_workers: ${data.n_workers}
+  valid:
+    _target_: torch.utils.data.DataLoader
+    dataset:
+      _target_: scarf.data.StaticDataset
+    batch_size: ${data.batch_size}
+    shuffle: false
+    num_workers: ${data.n_workers}
+model:
+  optimizer:
+    _target_: torch.optim.Adam
+    _partial_: true
+    lr: 0.001
+    betas:
+    - 0.9
+    - 0.999
+    weight_decay: 0
+  scheduler:
+    _target_: torch.optim.lr_scheduler.ReduceLROnPlateau
+    _partial_: true
+    mode: min
+    factor: 0.1
+    patience: 10
+  name: scarf-encoder
+  nn:
+    _target_: scarf.models.scarf.SCARFEncoder
+    dim_hidden: 256
+    n_encoder_layers: 4
+    n_projection_layers: 2
+    p_mask: 0.7
+    loss_func:
+      _target_: pytorch_metric_learning.losses.SelfSupervisedLoss
+      loss:
+        _target_: pytorch_metric_learning.losses.NTXentLoss
+        temperature: 1.0
+    batch_norm: true
+trainer:
+  _target_: pytorch_lightning.Trainer
+  max_epochs: 300
+  accelerator: mps
+  devices: 1
+  logger:
+    _target_: pytorch_lightning.loggers.WandbLogger
+    project: scarf
+    name: null
+    id: null
+    group: null
+    job_type: null
+    save_dir: ${hydra:runtime.output_dir}
+    log_model: true
+    tags: ${tags}
+  check_val_every_n_epoch: 10
+callbacks:
+  model_summary:
+    _target_: pytorch_lightning.callbacks.RichModelSummary
+  progress_bar:
+    _target_: pytorch_lightning.callbacks.RichProgressBar
+    refresh_rate: 5
+    leave: true
+  early_stopping:
+    _target_: pytorch_lightning.callbacks.EarlyStopping
+    monitor: valid-loss
+    min_delta: 0.001
+    patience: 3
+    check_on_train_epoch_end: false
+  model_checkpoint:
+    _target_: pytorch_lightning.callbacks.ModelCheckpoint
+    dirpath: ${hydra:runtime.output_dir}/checkpoints
+    monitor: train-loss
+    save_top_k: 1
+    save_on_train_epoch_end: true
+tags:
+- ${data.name}
+- ${model.name}
+seed: 43

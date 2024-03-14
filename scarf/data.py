@@ -54,9 +54,7 @@ def make_static_validation_data(file_name: str = "valid.csv"):
 # Hydra didn't recognize _target_ call when followed with filepaths.
 # Install is editable, so not sure what was going on...maybe some sort of cache?
 class StaticDataset(torch.utils.data.Dataset):
-    def __init__(
-        self, corrupt_fp: str = "valid-s4e2-ps-corrupt.pt", valid_fp: str = "valid-s4e2-ps-x.pt"
-    ):
+    def __init__(self, corrupt_fp: str = "valid-corrupt.pt", valid_fp: str = "valid-x.pt"):
         self.x_corrupt = torch.load(constants.DATA.joinpath(corrupt_fp))
         self.x = torch.load(constants.DATA.joinpath(valid_fp))
 

@@ -10,7 +10,7 @@ name: scarf-learner
 
 nn:
   _target_: scarf.models.scarf.SCARFLearner
-  encoder_ckpt: outputs/scarf-encoder/train_self/2024-03-05/21-45-12/checkpoints/epoch=91-step=1288.ckpt
+  encoder_ckpt: outputs/scarf-encoder/train/2024-03-13/09-04-59/checkpoints/epoch=52-step=742.ckpt
   dim_hidden: 256
   n_layers: 2
   num_classes: 7
